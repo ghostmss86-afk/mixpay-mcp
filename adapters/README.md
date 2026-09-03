@@ -45,12 +45,22 @@
 ## 4. OpenClaw
 OpenClaw 走 MCP 通道，把上面的 mcpServers 片段加进其 MCP 配置（具体路径以其文档为准）。
 
-## 5. Codex CLI
-文件: ~/.codex/config.toml：
+## 5. Codex（CLI / IDE 扩展 / ChatGPT 桌面版，三端共享一份配置）
+官方文档（developers.openai.com/codex/mcp）：Codex CLI、IDE 扩展、ChatGPT 桌面版共用 ~/.codex/config.toml（或可信项目的 .codex/config.toml），配一次三端生效。
+
+~/.codex/config.toml：
 [mcp_servers.mixpay]
 command = "npx"
 args = ["-y", "mixpay-mcp"]
 env = { "MIXPAY_PAYEE_ID" = "<你的PAYEE_UUID>" }
+
+或 CLI 一行搞定（随后 codex mcp list 验证，TUI 内 /mcp 查看）：
+  codex mcp add mixpay --env MIXPAY_PAYEE_ID=<你的PAYEE_UUID> -- npx -y mixpay-mcp
+
+注意（官方口径）：
+- ChatGPT 网页版不读本地 Codex 配置，只支持托管插件/远程 MCP——本地 stdio server 用桌面版/CLI/IDE；
+- Codex Cloud 尚未支持代理本地 stdio MCP server：本地跑 MCP，云端只做任务委托；
+- IDE 扩展如未显示 server，从齿轮菜单 MCP settings → Open config.toml 核对后重启扩展。
 
 ## 6. WorkBuddy
 文件: ~/.workbuddy/mcp.json（注意不是 .mcp.json）：
