@@ -78,6 +78,19 @@ describe("createOneTimePayment", () => {
     assert.equal(JSON.parse(calls[0].init.body).remark.length, 50);
   });
 
+  test("empty-string asset ids fall back to defaults (env template bug guard)", async () => {
+    const calls = stub(() => jsonResponse({ success: true, data: { code: "c" } }));
+    await createOneTimePayment({
+      payeeId: PAYEE,
+      quoteAmount: 1,
+      quoteAssetId: "",
+      settlementAssetId: "",
+    });
+    const body = JSON.parse(calls[0].init.body);
+    assert.equal(body.quoteAssetId, "usd");
+    assert.equal(body.settlementAssetId, USDT);
+  });
+
   test("API failure raises MixPayError with code", async () => {
     stub(() => jsonResponse({ success: false, message: "User does not exist", code: 10001 }));
     await assert.rejects(

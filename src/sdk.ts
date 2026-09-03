@@ -91,11 +91,13 @@ export async function createOneTimePayment(o: CreatePaymentOptions): Promise<Cre
     throw new MixPayError("callbackUrl 必须是 HTTPS（官方安全要求）", -2);
   }
   const traceId = o.traceId ?? randomUUID();
+  // `||` (not ??) on purpose: an empty-string env var must fall back to the
+  // default too. .env templates ship MIXPAY_SETTLE_ASSET="" and users copy them.
   const payload: Record<string, unknown> = {
     payeeId: o.payeeId,
-    quoteAssetId: o.quoteAssetId ?? "usd",
+    quoteAssetId: o.quoteAssetId || "usd",
     quoteAmount: String(o.quoteAmount),
-    settlementAssetId: resolveAssetId(o.settlementAssetId ?? "usdt"),
+    settlementAssetId: resolveAssetId(o.settlementAssetId || "usdt"),
     traceId,
     isTemp: "1",
   };
