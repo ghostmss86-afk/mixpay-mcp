@@ -1,4 +1,8 @@
 # MixPay MCP / CLI — 各 AI 编程工具接入配置
+
+> **npm 包发布前**，先全局安装：`npm install -g github:ghostmss86-afk/mixpay-mcp`
+> 然后把下方配置里的 `"command": "npx"` / `args: ["-y","mixpay-mcp"]` 换成 `"command": "mixpay-mcp"`、`args: []`（全局安装后 bin 直接在 PATH 上）。npm 发布后按原文即可。
+
 # 以下 JSON 片段均为模板，把 <你的PAYEE_UUID> 换成 MixPay Dashboard 里的收款 UUID。
 # 工具配置格式随版本可能变化，以各工具当前官方文档为准。
 

@@ -38,11 +38,17 @@ If none of these fit, this repo won't help you — no hard feelings.
 
 Prerequisite: a payeeId UUID — register at [mixpay.me](https://mixpay.me) → Dashboard → Settings → copy it (3 minutes, no merchant KYC).
 
-**Install (from source — works today):**
+**Install (works today — directly from GitHub):**
+
+```bash
+npm install -g github:ghostmss86-afk/mixpay-mcp
+```
+
+Prefer not to install globally? Clone instead:
 
 ```bash
 git clone https://github.com/ghostmss86-afk/mixpay-mcp && cd mixpay-mcp
-npm ci && npm link        # makes `mixpay` and `mixpay-mcp` available globally
+npm ci && npm link
 ```
 
 **Configure and smoke-test:**
@@ -53,7 +59,7 @@ mixpay pay --amount 0.01 --currency usd --settle usdt --remark smoke-test   # te
 mixpay wait --trace-id <traceId>            # confirm the money arrived
 ```
 
-> Once the package is on npm, `npx -y -p mixpay-mcp mixpay …` works anywhere without cloning. ⚠️ Always `-p mixpay-mcp` — bare `npx mixpay` runs someone else's package.
+> The package will also be on npm (`npx -y -p mixpay-mcp mixpay …`) once published. ⚠️ Never run bare `npx mixpay` — that's someone else's package.
 
 ## Works with
 

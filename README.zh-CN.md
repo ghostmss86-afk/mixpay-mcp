@@ -38,7 +38,13 @@
 
 前提：一个 payeeId UUID——在 [mixpay.me](https://mixpay.me) 注册 → Dashboard → Settings → 复制（3 分钟，无商户 KYC）。
 
-**安装（源码方式——当前即可用）：**
+**安装（当前即可用——直接从 GitHub 装）：**
+
+```bash
+npm install -g github:ghostmss86-afk/mixpay-mcp
+```
+
+不想装全局？用克隆方式：
 
 ```bash
 git clone https://github.com/ghostmss86-afk/mixpay-mcp && cd mixpay-mcp

@@ -58,10 +58,10 @@ cat .env 2>/dev/null || echo "NO_ENV"; ls keystore.json 2>/dev/null || echo "NO_
 
 ## 阶段 4 — 端到端自检（agent 执行 + 用户扫一次码）
 
-1. 先安装（npm 包发布前走源码方式）：
+1. 先安装（当前从 GitHub 直装，npm 包发布后可用 npx）：
 
 ```bash
-git clone https://github.com/ghostmss86-afk/mixpay-mcp && cd mixpay-mcp && npm ci && npm link
+npm install -g github:ghostmss86-afk/mixpay-mcp
 ```
 
 2. agent 生成测试单：
@@ -70,7 +70,7 @@ git clone https://github.com/ghostmss86-afk/mixpay-mcp && cd mixpay-mcp && npm c
 mixpay pay --amount 0.01 --currency usd --settle usdt --remark smoke-test
 ```
 
-⚠️ CLI 调用永远是 `-p mixpay-mcp`（或 `npm link` 后直接 `mixpay`），**永远不要 `npx mixpay`**——npm 上的 `mixpay` 是别人的包，属于供应链投毒风险。
+⚠️ 全局安装后直接用 `mixpay` 命令；**永远不要 `npx mixpay`**——npm 上的 `mixpay` 是别人的包，属于供应链投毒风险。
 
 3. agent 执行 `open <支付链接>`（macOS）直接在用户浏览器打开付款页——用户零复制，扫码或选择钱包付款即可；
 4. 付款完成后 agent 执行 `mixpay wait` → `verify_payment`（金额/币种硬校验）；
