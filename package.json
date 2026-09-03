@@ -11,6 +11,7 @@
     "dist",
     "adapters",
     "PROVISION.md",
+    "adapters/kyc-whitelist-runbook.md",
     "LICENSE",
     "README.md"
   ],

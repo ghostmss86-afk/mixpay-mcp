@@ -31,11 +31,15 @@ read_when:
 **路径 ② Mixin 账户（自托管）**：手机装 Mixin Messenger（mixin.one，助记词匿名注册，无手机号）→ 注册后 MixPay Dashboard 可用 Mixin 扫码登录 → Settings 复制 UUID。
 Mixin ID 与 payeeId 互换：`GET https://api.mixpay.me/v1/user/mixin_uuid/{mixin_id}`（仅搜已用过 MixPay 的用户）。
 
-### 第 2 步：新账户白名单门槛（必知）
+### 第 2 步：新账户白名单 + KYC 开通（必知，完整 Runbook 见 `kyc-whitelist-runbook.md`）
 
 新注册账户直接调 API 会报 **"This payee is not allow to receive payment"**，静态收款页报 **"payment information is invalid"**——这是官方新商户激活门槛，不是 bug。
-处理：发邮件到 **bd@mixpay.me** 申请开通（说明站点用途、payeeId、Mixin ID、结算币种），官方口径 48 小时内审核。
 诊断技巧：用 MixPay 官方示例 payeeId `8e69e534-d0c4-3e04-8b61-37a73cd9e7d7` 发同样请求——若成功，证明集成正确、纯账户门槛。
+
+**开通 = 邮件申请（官方唯一路径，实测 13 分钟回复）**：发邮件至 **bd@mixpay.me**，附 6 项 KYC 材料：
+① Company name ② Registration No./Tax No. ③ Operation country ④ Registration country ⑤ Company Types ⑥ Certificate of Incorporation（扫描件附件）。
+MixPay 验证后加白名单并提供集成指南。完整邮件模板、合规决策表（大陆主体风险/境外主体/无主体备选）、法律主体确认关卡：见 **`adapters/kyc-whitelist-runbook.md`**（照抄即用）。
+并行备选：白名单等待或被拒时，mixin-direct 自托管收款或 BTCPay Server（见 runbook 第七节）。
 
 ### 第 3 步：安装
 
