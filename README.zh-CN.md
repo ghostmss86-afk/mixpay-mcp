@@ -19,7 +19,9 @@
 
 一套 MCP server + CLI，让 AI 编程助手（Claude Code、Cursor、Codex、OpenCode、OpenClaw、WorkBuddy、豆包）一条命令给任何项目接入加密货币收款。付款方可用 20+ 链上的 100+ 币种，来自任意钱包或交易所（Binance Pay、KuCoin Pay、Gate Pay、Bybit Pay）。你只收 USDT。
 
-**它不是什么**：它永远不会把钱转出去。MCP server 按设计只收款——没有转账工具、没有托管、没有任何私钥。
+**它不是什么**：agent 永远不碰出金。MCP server 不提供任何转账工具——AI 在这里*没有能力*动钱，这是刻意设计。
+
+**钱的流向**：付款人用任意币种支付 → MixPay 把 USDT 直接结算到你的钱包 → 你自己在自己的电脑上提现/归集到冷钱包（口令 + PIN）。agent 的职责止于「生成收款链接」和「确认到账」——资金永远不经过 AI 的手。
 
 ## 为什么存在
 
@@ -86,8 +88,9 @@ npx -y -p mixpay-mcp mixpay wait --trace-id <traceId>            # 确认到账
 ## 安全模型
 
 - **零密钥**——收款只需要公开的 `payeeId`。没有可泄漏的东西，仓库可以放心公开。
+- **出金只属于人**——agent 没有能力移动资金。归集/提现是你在自己电脑上的手动步骤（CLI + 口令 + PIN），刻意隔离在 AI 路径之外。
 - **交付闸门**——`verify_payment` 做代码级校验（状态 + 收款方 + 金额 + 币种）。LLM 的判断在资金路径之外。
-- **永远没有转账工具**——MCP server 只收款；出金只在本机 CLI，口令 + PIN 双因素。
+- **永远没有转账工具**——MCP server 只收款，agent 无法移动资金。归集出金由你本机手动完成（口令 + PIN）。
 - **双确认**——webhook 和页面回跳只是提示；只有主动 API 查询才判定到账。网络错误永远不会变成假的「未支付」结论。
 - **抗提示注入**——进入 agent 上下文的 API 数据都标注为不可信；付款人备注这一经典注入入口被技能规则隔离。
 
@@ -102,6 +105,7 @@ npx -y -p mixpay-mcp mixpay wait --trace-id <traceId>            # 确认到账
 
 ## 路线图
 
+- [ ] `sweep`——本机 CLI 归集命令：把已结算资金提现到冷钱包（口令 + PIN，人工操作；经 MixPay 提现到你的链上地址）
 - [ ] `provision`——一条命令创建匿名收款账号（Mixin 网络用户，官方 API）
 - [ ] x402 / BTCPay Server 后端适配（协议抽象层）
 - [ ] Mixin Messenger 机器人——聊天内转账，秒到免费

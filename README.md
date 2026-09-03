@@ -19,7 +19,9 @@
 
 An MCP server + CLI that lets AI coding agents (Claude Code, Cursor, Codex, OpenCode, OpenClaw, WorkBuddy, Doubao) add crypto payment collection to any project in one command. Payers can use 100+ cryptocurrencies across 20+ chains from any wallet or exchange (Binance Pay, KuCoin Pay, Gate Pay, Bybit Pay). You settle in USDT.
 
-**What it is not:** it never moves money out. The MCP server is collection-only by design — no transfer tools, no custody, no private keys anywhere.
+**What it is not:** the agent never touches outflow. The MCP server exposes no transfer tools — moving money is something an AI *cannot* do here, by design.
+
+**How the money flows:** payer pays in any crypto → MixPay settles USDT directly into your wallet → you withdraw or sweep to cold storage yourself, on your own machine, with passphrase + PIN. The agent's job ends at "create payment link" and "verify settlement" — the money never routes through AI hands.
 
 ## Why it exists
 
@@ -86,8 +88,9 @@ confirmation before marking the order paid.
 ## Security model
 
 - **Zero-key** — collecting needs only a public `payeeId`. Nothing to leak; your repo stays publishable.
+- **Outflow is human-only** — the agent has no ability to move money. Sweeping funds onward is a deliberate manual step on your machine (CLI + passphrase + PIN), kept off the AI path by design.
 - **Delivery gate** — `verify_payment` does a code-level check (status + payeeId + amount + currency). LLM judgment sits *outside* the money path.
-- **No transfer tools, ever** — collection-only MCP server; outflow stays in the local CLI with passphrase + PIN.
+- **No transfer tools, ever** — collection-only MCP server; the agent cannot move money. Sweeping onward is yours, done locally with passphrase + PIN.
 - **Double confirmation** — webhooks are hints; only an active API query marks an order paid. Network errors never become fake verdicts.
 - **Prompt-injection hardened** — API payloads entering agent context are labeled untrusted; payer remarks are fenced by skill rules.
 
@@ -102,6 +105,7 @@ confirmation before marking the order paid.
 
 ## Roadmap
 
+- [ ] `sweep` — local CLI command to withdraw/sweep settled funds to cold storage (passphrase + PIN, human-operated; withdraw via MixPay to your on-chain address)
 - [ ] `provision` — one-command anonymous receiving accounts (Mixin network users, official API)
 - [ ] x402 / BTCPay Server backends behind the protocol abstraction
 - [ ] Mixin Messenger bot — in-chat payments, instant & free
