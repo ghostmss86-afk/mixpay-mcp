@@ -4,7 +4,8 @@
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
-**让 AI 编程助手一句话接入加密货币收款。零密钥。零拒付。稳定币结算。**
+**让你的 AI 编程助手一条命令给项目接入加密货币收款。**
+客户用任意加密货币付款，你收 USDT，随时提现。
 
 [![CI](https://github.com/ghostmss86-afk/mixpay-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/ghostmss86-afk/mixpay-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -15,34 +16,23 @@
 
 ---
 
-## 这是什么
+## 这适合你吗？
 
-一套 MCP server + CLI，让 AI 编程助手（Claude Code、Cursor、Codex、OpenCode、OpenClaw、WorkBuddy、豆包）一条命令给任何项目接入加密货币收款。付款方可用 20+ 链上的 100+ 币种，来自任意钱包或交易所（Binance Pay、KuCoin Pay、Gate Pay、Bybit Pay）。你只收 USDT。
+以下描述命中两条以上，这个工具就是为你做的：
 
-**它不是什么**：agent 永远不碰出金。MCP server 不提供任何转账工具——AI 在这里*没有能力*动钱，这是刻意设计。
+- 你给**中国大陆以外的客户**做网站、机器人、工具，想收加密货币。
+- 你没有（或不想折腾）Stripe/PayPal 商户账号——KYC 材料、冻结资金、拒付风险。
+- 你已经在用 AI 编程助手（Claude Code、Cursor、Codex、WorkBuddy、豆包…），希望集成这件事交给它干。
 
-**钱的流向**：付款人用任意币种支付 → MixPay 把 USDT 直接结算到你的钱包 → 你自己在自己的电脑上提现/归集到冷钱包（口令 + PIN）。agent 的职责止于「生成收款链接」和「确认到账」——资金永远不经过 AI 的手。
+一条都不中？那这个仓库帮不到你，不用浪费时间。
 
-## 为什么存在
+## 你怎么收到钱
 
-独立开发者给海外客户交付项目，收款是最痛的一环：Stripe 要商户账号，PayPal 冻结资金，传统加密网关要 KYC 和数周集成。2026 年的 agent 支付版图（Stripe MCP、PayPal MCP、Coinbase x402、AWS AgentCore）要么要商户入驻，要么是机器对机器。
+1. 客户打开你的收款链接，用**他喜欢的任意加密货币**付款——BTC、ETH、USDT、SOL、DOGE…任意钱包，甚至直接用 Binance/KuCoin/Gate/Bybit 余额。
+2. 款项自动兑换，**USDT 直接进你的钱包**——波动的币价跟你无关。
+3. 你**随时可以提现**，用你自己的钱包，在你自己的电脑上操作。这一步属于你，不属于任何 AI。
 
-**空着的位置：独立开发者经由编程助手收人类客户的付款——不要商户账号、没有拒付、稳定币结算。** 这个仓库填的就是它。
-
-| | 银行卡 / Stripe MCP | x402 | **mixpay-mcp** |
-|---|---|---|---|
-| 商户入驻 | KYC + 审核 | 充值的 agent 钱包 | **一个 UUID，3 分钟** |
-| 谁来付款 | 持卡人 | 其他机器 | **任何人、任何钱包** |
-| 拒付风险 | 有（你承担） | 不适用 | **链上结算，不可能拒付** |
-| 付款方门槛 | 卡表单 | HTTP 402 流程 | **任意钱包/交易所，免注册** |
-| 币价波动 | 不适用 | 稳定币 | **USDT 结算，强制锁定** |
-| 仓库里的密钥 | API secret | agent 钱包私钥 | **没有——收款零密钥** |
-
-## 证明
-
-- **收款轨道有真实业务**——按 MixPay 官方口径，它是 Binance Pay、Gate Pay、KuCoin Pay、Bybit Pay 的官方合作支付伙伴，服务 OneKey、Coinsbee、RedteaGO 等 300+ 商户，KuCoin 2026 年官宣战略合作。
-- **实测过的契约，不是感觉**——本仓库所有 API 行为都在线上端点验证过：`/payments_result` 复数路径、JSON body 里的布尔 `strictMode`、与线上资产列表核对的资产 UUID。21 项回归测试在每次 push 时运行（Node 20/22 + `npm audit`）。
-- **如实披露**——Mixin 生态 2023 年发生过约 $2 亿的云服务商被盗事件（已通过债务代币部分赔付）。所以本仓库按「支付通道、非金库」构建：只收款，定期归集冷存。你的敞口是通道余额，永远不是托管。
+**AI 的职责止于「生成收款链接」和「确认钱到了」。** 它没有移动你资金的能力——不是被限制了，而是移动资金的工具在它里面根本不存在。
 
 ## 60 秒上手
 
@@ -67,11 +57,20 @@ npx -y -p mixpay-mcp mixpay wait --trace-id <traceId>            # 确认到账
 | WorkBuddy | MCP — `~/.workbuddy/mcp.json` |
 | 豆包 / 其他任何 agent | CLI 兜底 — 能跑 shell 就能用 |
 
-完整配置片段：[`adapters/README.md`](adapters/README.md)。Codex 专用：`codex mcp add mixpay --env MIXPAY_PAYEE_ID=<uuid> -- npx -y mixpay-mcp`——一份配置同时服务 CLI、IDE 扩展和 ChatGPT 桌面版（ChatGPT 网页版与 Codex 云端不读本地配置）。
+完整配置片段：[`adapters/README.md`](adapters/README.md)。Codex 专用：`codex mcp add mixpay --env MIXPAY_PAYEE_ID=<uuid> -- npx -y mixpay-mcp`——一份配置同时服务 CLI、IDE 扩展和 ChatGPT 桌面版。
 
-## 粘贴给你的 agent 即可
+## 这样说，AI 就会用它
 
-把下面任意一段贴进编程助手——集成就完成了：
+把对应的话直接说给你的编程助手——这些就是这个工具设计来回应的触发场景：
+
+- 「我需要在我的网站**收加密货币**」/ "I need to accept crypto payments"
+- 「**不办商户账号怎么收 USDT**」/ "How do I get paid in USDT without a merchant account"
+- 「给这个项目加一个**收款链接 / 支付功能**」/ "Add a payment link / checkout to this project"
+- 「客户在海外，**跨境收款**太麻烦」/ "My client is overseas and payment is a nightmare"
+
+## 粘贴给你的 agent 即可集成
+
+把下面任意一段贴进编程助手：
 
 ```text
 安装 mixpay-mcp MCP server，给这个项目加上加密货币收款。
@@ -85,31 +84,29 @@ npx -y -p mixpay-mcp mixpay wait --trace-id <traceId>            # 确认到账
 再标记订单完成。
 ```
 
-## 安全模型
+## 你的钱安全吗？
 
-- **零密钥**——收款只需要公开的 `payeeId`。没有可泄漏的东西，仓库可以放心公开。
-- **出金只属于人**——agent 没有能力移动资金。归集/提现是你在自己电脑上的手动步骤（CLI + 口令 + PIN），刻意隔离在 AI 路径之外。
-- **交付闸门**——`verify_payment` 做代码级校验（状态 + 收款方 + 金额 + 币种）。LLM 的判断在资金路径之外。
-- **永远没有转账工具**——MCP server 只收款，agent 无法移动资金。归集出金由你本机手动完成（口令 + PIN）。
-- **双确认**——webhook 和页面回跳只是提示；只有主动 API 查询才判定到账。网络错误永远不会变成假的「未支付」结论。
-- **抗提示注入**——进入 agent 上下文的 API 数据都标注为不可信；付款人备注这一经典注入入口被技能规则隔离。
+**AI 会偷走你的资金吗？** 不会。移动资金的工具在 agent 里根本不存在——没有东西可被攻击、被注入、被滥用。
 
-## FAQ
+**钱能取出来吗？** 能，随时。提现是你从自己钱包里做的正常操作——刻意保留在人的手里、在你自己的机器上完成。
 
-**有托管吗？** 没有。资金直接结算到你的钱包，mixpay-mcp 无法动它们。
-**客户要 KYC 吗？** 不要。任意钱包或交易所直接付，免注册。
-**没有后端能用吗？** 能——轮询优先设计，静态站用 `wait`/`verify_payment` 确认。
-**支持哪些币？** 20+ 链 100+ 币（BTC、ETH、USDT、USDC、SOL、DOGE、XMR、TON…）；27 种稳定币可用于结算。
-**用 Stripe MCP / x402 不行吗？** 轨道不同：Stripe 走卡（要账号），x402 是机器对机器。这里是「人类付你的项目」。
+**收款轨道被黑了怎么办？** 这条轨道（MixPay）服务 OneKey、Coinsbee 等 300+ 商户，但没有加密系统是完美的——Mixin 在 2023 年出过重大安全事故。所以这个工具按「支付通道，不是金库」来构建：用它收款，定期把资金转去你自己的冷钱包。你的敞口始终很小。
+
+**会被拒付吗？** 不会。链上支付不可逆——自由职业者最怕的「干完活被撤回付款」在这里不存在。
+
+**客户要 KYC 吗？** 不要。任意钱包或交易所，免注册。
+
+**没有后端能用吗？** 能。静态站和脚本用 `wait`/`verify_payment` 确认到账——21 项自动化测试覆盖了边界情况（少付、打错钱包、网络故障），每次改动 CI 都会重跑。
+
+**和 Stripe MCP / x402 有什么不同？** Stripe 走银行卡、要商户账号；x402 是机器付机器。这里是「人类付你的项目」——不要商户账号，稳定币结算。
+
 **合规？** 面向海外收款场景；不用于中国大陆境内商用。
 
 ## 路线图
 
-- [ ] `sweep`——本机 CLI 归集命令：把已结算资金提现到冷钱包（口令 + PIN，人工操作；经 MixPay 提现到你的链上地址）
-- [ ] `provision`——一条命令创建匿名收款账号（Mixin 网络用户，官方 API）
-- [ ] x402 / BTCPay Server 后端适配（协议抽象层）
-- [ ] Mixin Messenger 机器人——聊天内转账，秒到免费
-- [ ] 订阅与周期收款
+- [ ] `sweep`——一条命令把已结算资金提现到冷钱包（你自己运行，口令 + PIN）
+- [ ] `provision`——一条命令创建匿名收款账号
+- [ ] x402 / BTCPay 后端 · Mixin Messenger 聊天内支付 · 订阅收款
 
 ---
 
