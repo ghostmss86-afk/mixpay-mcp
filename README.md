@@ -90,7 +90,9 @@ confirmation before marking the order paid.
 
 **Can you get your money out?** Yes, anytime. Withdrawal is a normal step you do yourself from your own wallet — deliberately kept in human hands, on your machine.
 
-**What if the rail gets hacked?** The payment rail (MixPay) processes for 300+ merchants including OneKey and Coinsbee, but no crypto system is bulletproof — Mixin had a major breach in 2023. So this tool is built as a *payment channel, not a vault*: you collect through it and move funds to your own cold storage regularly. Your exposure stays small.
+**What if the rail gets hacked?** Fair question — here's the full record. In Sept 2023, attackers compromised the *cloud provider's* database of the Mixin ecosystem and drained ~$200M from hot wallets. The response and fixes: deposits/withdrawals were suspended the same day; Google's incident-response team and SlowMist ran the investigation; the legacy withdrawal infrastructure was **permanently disabled** and users migrated to a rebuilt network; hot-wallet custody was replaced by **Mixin Safe**, a distributed cold architecture (Bitcoin multisig + timelock + decentralized MPC) designed specifically to survive that class of compromise; keys are now sharded via the TIP decentralized key network with TEE signing, under an ongoing audit process. On accountability: affected users were offered up to 50% in stablecoins plus Mixin Debt Tokens — the ~$23M MDTu tranche is on track for full repayment by Sept 2026, though the MDTb/MDTe tranches still have no schedule. No new breach has occurred since (a Feb 2026 movement of stolen coins was the original attacker, not a Mixin compromise).
+
+So this tool is built as a *payment channel, not a vault*: you collect through it and move funds to your own cold storage regularly. Your exposure stays small — and independently verifiable.
 
 **Will you be charged back?** No. On-chain payments are final — the classic freelance nightmare disappears.
 
