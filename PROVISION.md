@@ -15,9 +15,16 @@ cat .env 2>/dev/null || echo "NO_ENV"; ls keystore.json 2>/dev/null || echo "NO_
 
 > 配置只需要你亲手做两件事：手机上创建账号（约 5 分钟）+ 浏览器扫码建一个开发者 App（约 3 分钟）。其余我来。全程匿名，不需要手机号和实名。
 
-## 阶段 1 — 手机：创建 Mixin 账号（唯一必须人工的环节）
+## 阶段 1 — 前置：拿到 payeeId（两条路，先走快的）
 
-给用户的操作清单（原样发送）：
+**路径 ① 邮箱直注（最快，官方支持）**：打开 https://dashboard.mixpay.me → 邮箱 + 验证码注册登录 → Settings → 复制 payeeId UUID。无需 Mixin 账号。
+注意：邮箱账户的资金结算在 MixPay 账户钱包内（提现走 Dashboard 出金流程）；自托管需求更强的用户后续可升级 Mixin 账户（路径 ②）。若 API 对新账户有白名单要求（报错即知），回落路径 ② 或联系 bd@mixpay.me。
+
+**路径 ② Mixin 账户（自托管，见阶段 2）**：手机装 Mixin → 助记词匿名注册 → developers.mixin.one 建 App → keystore。适合要用 provision 创建专用收款账号的场景。
+
+## 阶段 2 — Mixin 路径（仅路径 ② 需要：手机 5 分钟 + 电脑 3 分钟）
+
+**手机操作清单（原样发送给用户）**：
 
 1. 从官方渠道下载 **Mixin Messenger**（mixin.one，认准官方，应用商店有仿冒品）；
 2. 打开 → **Create Account → Mnemonic Phrase（助记词）→ Create**；
@@ -26,9 +33,7 @@ cat .env 2>/dev/null || echo "NO_ENV"; ls keystore.json 2>/dev/null || echo "NO_
 
 安全提示同步给用户：助记词账号完全匿名（无手机号无邮箱）；但代价是无法设置恢复联系人，助记词是唯一救命稻草。
 
-## 阶段 2 — 电脑：创建开发者 App（拿到 keystore）
-
-给用户的操作清单：
+**电脑操作清单（拿到 keystore）**：
 
 1. 浏览器打开 `developers.mixin.one` → 用 Mixin Messenger 扫码登录；
 2. **Create App**（名字随意，如 `my-pay`）；
