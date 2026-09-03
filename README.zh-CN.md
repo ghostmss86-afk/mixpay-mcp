@@ -38,13 +38,22 @@
 
 前提：一个 payeeId UUID——在 [mixpay.me](https://mixpay.me) 注册 → Dashboard → Settings → 复制（3 分钟，无商户 KYC）。
 
+**安装（源码方式——当前即可用）：**
+
 ```bash
-npx -y -p mixpay-mcp mixpay init --payee-id <你的UUID>          # 配置
-npx -y -p mixpay-mcp mixpay pay --amount 0.01 --currency usd --settle usdt --remark smoke-test   # 测试单
-npx -y -p mixpay-mcp mixpay wait --trace-id <traceId>            # 确认到账
+git clone https://github.com/ghostmss86-afk/mixpay-mcp && cd mixpay-mcp
+npm ci && npm link        # 全局获得 `mixpay` 和 `mixpay-mcp` 两个命令
 ```
 
-⚠️ 必须带 `-p mixpay-mcp`。裸 `npx mixpay` 会执行 npm 上别人的同名包。
+**配置并自检：**
+
+```bash
+mixpay init --payee-id <你的UUID>          # 配置
+mixpay pay --amount 0.01 --currency usd --settle usdt --remark smoke-test   # 测试单
+mixpay wait --trace-id <traceId>            # 确认到账
+```
+
+> npm 包发布后，任何目录都能直接 `npx -y -p mixpay-mcp mixpay …`。⚠️ 必须带 `-p mixpay-mcp`——裸 `npx mixpay` 会执行 npm 上别人的同名包。
 
 ## 支持的工具
 
